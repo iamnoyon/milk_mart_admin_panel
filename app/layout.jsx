@@ -10,9 +10,9 @@ const manrope = Manrope({
 });
 
 export const metadata = {
-  title: "CloudCafe | Restaurant Management Platform",
+  title: "DairyMart | Fresh Dairy Products",
   description:
-    "CloudCafe is a complete restaurant management platform for managing orders, products, sales, customers, and business operations.",
+    "DairyMart is a convenient platform for discovering and ordering fresh dairy products, including milk, yogurt, butter, cheese, and more.",
 };
 
 export default function RootLayout({ children }) {
