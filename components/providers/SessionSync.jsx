@@ -9,48 +9,39 @@ import { useProfileQuery } from "@/store/auth";
 import { performLogout } from "@/utils/logout";
 
 export default function SessionSync() {
-  const { data: session, status } = useSession();
-  const dispatch = useDispatch();
+    const { data: session, status } = useSession();
+    const dispatch = useDispatch();
 
-  // Get backend token from NextAuth session
-  const token = session?.user?.backendToken;
+    const token = session?.user?.backendToken;
 
-  // Sync NextAuth token → Redux
-  useEffect(() => {
-    if (status === "authenticated" && token) {
-      dispatch(setToken(token));
-    }
+    useEffect(() => {
+        if (status === "authenticated" && token) {
+            dispatch(setToken(token));
+        }
+    }, [status, token, dispatch]);
 
-    // Clear Redux token when logged out
-    if (status === "unauthenticated") {
-      dispatch(setToken(null));
-    }
-  }, [status, token, dispatch]);
+    const {
+        data: profileData,
+        isError,
+    } = useProfileQuery(token, {
+        skip: status !== "authenticated" || !token,
+    });
 
-  // Profile API
-  // RTK Query will get the token from Redux automatically
-  const {
-    data: profileData,
-    isError,
-    error,
-  } = useProfileQuery(token, {
-    skip: status !== "authenticated" || !token,
-  });
+    useEffect(() => {
+        if (profileData?.data) {
+            dispatch(setUser(profileData.data));
 
-  // Store profile/user in Redux
-  useEffect(() => {
-    if (profileData?.data) {
-      dispatch(setUser(profileData.data));
-    }
-  }, [profileData, dispatch]);
+            if (token) {
+                dispatch(setToken(token));
+            }
+        }
+    }, [profileData, token, dispatch]);
 
-  // Logout only when authentication fails
-  useEffect(() => {
-    if (isError && token) {
-      performLogout();
-    }
-  }, [isError, token]);
+    useEffect(() => {
+        if (isError && token) {
+            performLogout();
+        }
+    }, [isError, token]);
 
-  return null;
+    return null;
 }
-

@@ -89,7 +89,7 @@ const CategoryList = () => {
             ) : (
                 <ReactTable
                     columns={columns}
-                    dataSource={categoryData?.dataSource || []}
+                    dataSource={categoryData?.data || []}
                     totalRecords={categoryData?.totalRecords}
                     pageAndLimit={pageAndLimit}
                     showPageSizeDropdown={(categoryData?.totalRecords || 0) > pageAndLimit.limit}
