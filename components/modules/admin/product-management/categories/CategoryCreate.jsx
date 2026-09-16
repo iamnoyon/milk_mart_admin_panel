@@ -12,22 +12,31 @@ import { useForm } from 'react-hook-form';
 import { useCreateCategoryMutation } from '@/store/admin/category';
 import { useRouter } from 'next/navigation';
 import useToaster from '@/components/hooks/useToaster';
+import FormFileUpload from '@/components/Forms/FormFileUpload';
+import FormRadioGroup from '@/components/Forms/FormRadioGroup';
 
 const CategoryCreate = () => {
     const router = useRouter();
     const { errorToaster, successToaster } = useToaster();
-    const [Create] = useCreateCategoryMutation();
+    const [Create, {isLoading}] = useCreateCategoryMutation();
 
     const methods = useForm({
         resolver: zodResolver(categorySchema),
         defaultValues: {
             name: '',
-            description: '',
+            icon: '',
+            image: ''
         },
     });
 
     const onSubmit = (data) => {
-        Create(data)
+        const payload = {
+            name: data.name,
+            icon: data.icon,
+            image: data.image.url
+        }
+        console.log(payload)
+        Create(payload)
             .unwrap()
             .then((res) => {
                 if (res?.success || res?.status_code === 201) {
@@ -51,17 +60,23 @@ const CategoryCreate = () => {
                     <FormInput
                         name="name"
                         label="Category Name"
-                        placeholder='Electronics'
+                        placeholder='Enter category name'
                         required
                     />
-                    <div className='lg:col-span-2'>
-                        <FormTextarea
-                            name="description"
-                            label="Description"
-                            placeholder='Short description about this category'
-                            rows={4}
-                        />
-                    </div>
+                    <FormInput
+                        name="icon"
+                        label="Category Icon"
+                        placeholder='Enter icon name'
+                        required
+                    />
+                    <FormFileUpload
+                        name='image'
+                        label='Category Image'
+                    />
+                    {/* <FormRadioGroup
+                    label='Status'
+                    name='status'
+                    /> */}
                 </div>
                 <div className='flex items-center justify-center gap-10 mt-20'>
                     <button
@@ -73,6 +88,7 @@ const CategoryCreate = () => {
                     </button>
                     <button
                         type="submit"
+                        disabled={isLoading}
                         className='w-40 hover:cursor-pointer hover:bg-[#053872] rounded font-semibold py-2 bg-[#0A4D99] text-white'
                     >
                         Save

@@ -7,7 +7,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { categoryUpdateSchema } from './schema';
 import Formwrapper from '@/components/Forms/Formwrapper';
 import FormInput from '@/components/Forms/FormInput';
-import FormTextarea from '@/components/Forms/FormTextarea';
 import { useForm } from 'react-hook-form';
 import {
     useGetCategoryInfoByIdQuery,
@@ -16,6 +15,7 @@ import {
 import { useParams, useRouter } from 'next/navigation';
 import useToaster from '@/components/hooks/useToaster';
 import Swal from "sweetalert2";
+import FormFileUpload from '@/components/Forms/FormFileUpload';
 
 const CategoryEdit = () => {
     const id = useParams()?.id;
@@ -28,15 +28,17 @@ const CategoryEdit = () => {
         resolver: zodResolver(categoryUpdateSchema),
         defaultValues: {
             name: '',
-            description: '',
+            icon: '',
+            image: ''
         },
     });
 
     useEffect(() => {
         if (categoryInfo?.success) {
             methods.reset({
-                name: categoryInfo?.data?.name,
-                description: categoryInfo?.data?.description || '',
+                name: categoryInfo?.data?.name || '',
+                icon: categoryInfo?.data?.icon || '',
+                image: categoryInfo?.data?.image || ''
             });
         }
     }, [categoryInfo]);
@@ -84,17 +86,19 @@ const CategoryEdit = () => {
                     <FormInput
                         name="name"
                         label="Category Name"
-                        placeholder='Electronics'
+                        placeholder='Enter category name'
                         required
                     />
-                    <div className='lg:col-span-2'>
-                        <FormTextarea
-                            name="description"
-                            label="Description"
-                            placeholder='Short description about this category'
-                            rows={4}
-                        />
-                    </div>
+                    <FormInput
+                        name="icon"
+                        label="Category Icon"
+                        placeholder='Enter icon name'
+                        required
+                    />
+                    <FormFileUpload
+                        name='image'
+                        label='Category Image'
+                    />
                 </div>
                 <div className='flex items-center justify-center gap-10 mt-20'>
                     <button
