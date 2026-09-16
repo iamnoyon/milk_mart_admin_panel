@@ -1,7 +1,7 @@
 /**
- * Transforms a paginated API response into ReactTable-ready props.
+ * Transforms an API list response into ReactTable-ready props.
  *
- * Supports two API response shapes:
+ * Supports three API response shapes:
  *
  * Shape A (wrapped):
  * {
@@ -27,6 +27,13 @@
  *   }
  * }
  *
+ * Shape C (flat array, no pagination):
+ * {
+ *   success: boolean,
+ *   message: string,
+ *   data: Array
+ * }
+ *
  * Returns:
  * {
  *   dataSource: Array,
@@ -36,29 +43,35 @@
  * }
  */
 export const transformListResponse = (response) => {
-  const data = response?.data;
+    const data = response?.data;
 
-  // Shape B: data is the array directly, meta holds pagination
-  if (Array.isArray(data) && response?.meta) {
+    if (Array.isArray(data)) {
+        if (response?.meta) {
+            return {
+                dataSource: data ?? [],
+                totalRecords: response.meta?.total ?? data.length,
+                pageAndLimit: {
+                    page: response.meta?.page ?? 1,
+                    limit: response.meta?.limit ?? (data.length || 10),
+                },
+                paginationOn: (response.meta?.total ?? data.length ?? 0) > (response.meta?.limit ?? data.length ?? 0),
+            };
+        }
+        return {
+            dataSource: data ?? [],
+            totalRecords: data.length,
+            pageAndLimit: { page: 1, limit: data.length || 10 },
+            paginationOn: false,
+        };
+    }
+
     return {
-      dataSource: data ?? [],
-      totalRecords: response.meta?.total ?? 0,
-      pageAndLimit: {
-        page: response.meta?.page ?? 1,
-        limit: response.meta?.limit ?? 10,
-      },
-      paginationOn: (response.meta?.total ?? 0) > 0,
+        dataSource: data?.content ?? [],
+        totalRecords: data?.total ?? 0,
+        pageAndLimit: {
+            page: data?.page ?? 1,
+            limit: data?.limit ?? 10,
+        },
+        paginationOn: (data?.total ?? 0) > 0,
     };
-  }
-
-  // Shape A: data is an object with content array and pagination fields
-  return {
-    dataSource: data?.content ?? [],
-    totalRecords: data?.total ?? 0,
-    pageAndLimit: {
-      page: data?.page ?? 1,
-      limit: data?.limit ?? 10,
-    },
-    paginationOn: (data?.total ?? 0) > 0,
-  };
 };
