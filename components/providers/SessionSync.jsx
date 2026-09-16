@@ -10,7 +10,6 @@ import { performLogout } from "@/utils/logout";
 
 export default function SessionSync() {
   const { data: session, status } = useSession();
-  console.log(session, 'syc')
   const dispatch = useDispatch();
 
   // Get backend token from NextAuth session

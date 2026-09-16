@@ -3,6 +3,7 @@
 import {
   LayoutDashboard,
   Users,
+  FolderTree,
 } from "lucide-react";
 
 
@@ -20,6 +21,20 @@ export const menuItems = [
     path: "/user-management/users",
     activePath: ["/user-management/users"],
     // requiredPermissions: ["user:read"],
+  },
+  {
+    name: "Product Management",
+    icon: FolderTree,
+    path: '#',
+    children: [
+      {
+        name: "Category",
+        icon: FolderTree,
+        path: "/product-management/categories",
+        activePath: ["/product-management/categories"],
+        requiredPermissions: ["read_category"],
+      },
+    ]
   }
 ];
 
@@ -27,27 +42,50 @@ export const menuItems = [
 
 
 export const breadcrumbData = [
-    {
-        route: '/user-management/users',
-        items: [
-            { label: 'Dashboard', url: '/dashboard' },
-            { label: 'User List', url: '#' },
-        ]
-    },
-    {
-        route: '/user-management/users/create',
-         items: [
-            { label: 'Dashboard', url: '/dashboard' },
-            { label: 'User List', url: '/user-management/users' },
-            { label: 'Create', url: '#' },
-        ]
-    },
-     {
-        route: '/user-management/users/edit/[id]',
-         items: [
-            { label: 'Dashboard', url: '/dashboard' },
-            { label: 'User List', url: '/user-management/users' },
-            { label: 'Edit', url: '#' },
-        ]
-    }
+  {
+    route: '/user-management/users',
+    items: [
+      { label: 'Dashboard', url: '/dashboard' },
+      { label: 'User List', url: '#' },
+    ]
+  },
+  {
+    route: '/user-management/users/create',
+    items: [
+      { label: 'Dashboard', url: '/dashboard' },
+      { label: 'User List', url: '/user-management/users' },
+      { label: 'Create', url: '#' },
+    ]
+  },
+  {
+    route: '/user-management/users/edit/[id]',
+    items: [
+      { label: 'Dashboard', url: '/dashboard' },
+      { label: 'User List', url: '/user-management/users' },
+      { label: 'Edit', url: '#' },
+    ]
+  },
+  {
+    route: '/product-management/categories',
+    items: [
+      { label: 'Dashboard', url: '/dashboard' },
+      { label: 'Category List', url: '#' },
+    ]
+  },
+  {
+    route: '/product-management/categories/create',
+    items: [
+      { label: 'Dashboard', url: '/dashboard' },
+      { label: 'Category List', url: '/product-management/categories' },
+      { label: 'Create', url: '#' },
+    ]
+  },
+  {
+    route: '/product-management/categories/edit/[id]',
+    items: [
+      { label: 'Dashboard', url: '/dashboard' },
+      { label: 'Category List', url: '/product-management/categories' },
+      { label: 'Edit', url: '#' },
+    ]
+  }
 ]

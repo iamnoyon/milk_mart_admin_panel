@@ -4,6 +4,8 @@ import { NextResponse } from "next/server";
 const protectedRoutes = [
   "/dashboard",
   "/profile",
+  "/user-management",
+  "/product-management",
 ];
 
 export default auth((request) => {
@@ -14,18 +16,13 @@ export default auth((request) => {
       pathname === route || pathname.startsWith(`${route}/`)
   );
 
-  // Not a protected route
   if (!isProtectedRoute) {
     return NextResponse.next();
   }
 
-  // Auth.js did not find a valid authenticated session
   if (!request.auth) {
     const loginUrl = new URL("/", request.url);
-
-    // Optional: remember where the user wanted to go
     loginUrl.searchParams.set("callbackUrl", pathname);
-
     return NextResponse.redirect(loginUrl);
   }
 
@@ -36,5 +33,7 @@ export const config = {
   matcher: [
     "/dashboard/:path*",
     "/profile/:path*",
+    "/user-management/:path*",
+    "/product-management/:path*",
   ],
 };
