@@ -3,9 +3,14 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   id: null,
   name: "",
-  email: "",
+  phone: "",
   role: "",
-  profileImageUrl: "",
+  area: "",
+  avenue: "",
+  road: "",
+  house: "",
+  flat: "",
+  verified: false,
   permissions: null,
   token: null,
 };

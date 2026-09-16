@@ -4,7 +4,7 @@ export const authSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     profile: builder.query({
       query: (token) => ({
-        url: "/auth/profile",
+        url: "/auth/me",
         method: "GET",
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       }),
@@ -35,6 +35,13 @@ export const authSlice = apiSlice.injectEndpoints({
         method: "PATCH",
         body: data
       })
+    }),
+    sendLoginOTP: builder.mutation({
+      query: (data)=>({
+        url: "/auth/resend-otp",
+        method: "POST",
+        body: data
+      })
     })
   }),
   overrideExisting: true,
@@ -46,4 +53,5 @@ export const {
   useChangePasswordMutation,
   useUpdateProfileMutation,
   useForgotPasswordMutation,
+  useSendLoginOTPMutation
 } = authSlice;

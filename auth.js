@@ -8,8 +8,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Credentials({
       credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" },
+        phone: { label: "Phone", type: "text" },
+        otp: { label: "OTP", type: "text" },
       },
       async authorize(credentials) {
         try {
@@ -19,8 +19,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
-                email: credentials.email,
-                password: credentials.password,
+                phone: credentials.phone,
+                otp: credentials.otp,
               }),
             }
           );
@@ -31,16 +31,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             return null;
           }
 
-          const user = data?.data;
-
           return {
-            id: user?.id,
-            name: user?.name,
-            email: user?.email,
-            image: user?.profileImageUrl,
-            role: user?.role,
+            id: "otp-user",
             token: data.token,
-            permissions: user?.permissions,
           };
         } catch (error) {
           console.error("Auth error:", error);
@@ -58,21 +51,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id;
-        token.role = user.role;
         token.backendToken = user.token;
-        token.profileImageUrl = user.image;
-        token.permissions = user.permissions;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.id;
-        session.user.role = token.role;
         session.user.backendToken = token.backendToken;
-        session.user.profileImageUrl = token.profileImageUrl;
-        session.user.permissions = token.permissions;
       }
       return session;
     },

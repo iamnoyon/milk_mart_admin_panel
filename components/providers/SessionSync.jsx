@@ -10,6 +10,7 @@ import { performLogout } from "@/utils/logout";
 
 export default function SessionSync() {
   const { data: session, status } = useSession();
+  console.log(session, 'syc')
   const dispatch = useDispatch();
 
   // Get backend token from NextAuth session
@@ -33,8 +34,8 @@ export default function SessionSync() {
     data: profileData,
     isError,
     error,
-  } = useProfileQuery(undefined, {
-    skip: status !== "authenticated",
+  } = useProfileQuery(token, {
+    skip: status !== "authenticated" || !token,
   });
 
   // Store profile/user in Redux
