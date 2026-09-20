@@ -4,6 +4,7 @@ import {
   LayoutDashboard,
   Users,
   FolderTree,
+  Package,
 } from "lucide-react";
 
 
@@ -33,6 +34,13 @@ export const menuItems = [
         path: "/product-management/categories",
         activePath: ["/product-management/categories"],
         requiredPermissions: ["read_category"],
+      },
+      {
+        name: "Products",
+        icon: Package,
+        path: "/product-management/products",
+        activePath: ["/product-management/products"],
+        // requiredPermissions: ["read_product"],
       },
     ]
   }
@@ -85,6 +93,29 @@ export const breadcrumbData = [
     items: [
       { label: 'Dashboard', url: '/dashboard' },
       { label: 'Category List', url: '/product-management/categories' },
+      { label: 'Edit', url: '#' },
+    ]
+  },
+  {
+    route: '/product-management/products',
+    items: [
+      { label: 'Dashboard', url: '/dashboard' },
+      { label: 'Product List', url: '#' },
+    ]
+  },
+  {
+    route: '/product-management/products/create',
+    items: [
+      { label: 'Dashboard', url: '/dashboard' },
+      { label: 'Product List', url: '/product-management/products' },
+      { label: 'Create', url: '#' },
+    ]
+  },
+  {
+    route: '/product-management/products/edit/[id]',
+    items: [
+      { label: 'Dashboard', url: '/dashboard' },
+      { label: 'Product List', url: '/product-management/products' },
       { label: 'Edit', url: '#' },
     ]
   }

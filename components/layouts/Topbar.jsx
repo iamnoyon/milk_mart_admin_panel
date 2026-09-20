@@ -26,8 +26,6 @@ export default function Topbar({ onMenuToggle }) {
     const dropdownRef = useRef(null);
     const pathname = usePathname();
 
-    console.log(state, 'topbar')
-
     const currentBreadcrumb = breadcrumbData.find((item) => {
         if (item.route.includes("[id]")) {
             const routePattern = item.route.replace("[id]", "([^/]+)");
