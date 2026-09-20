@@ -44,25 +44,13 @@ const CategoryEdit = () => {
     }, [categoryInfo]);
 
     const onSubmit = async (data) => {
-        const result = await Swal.fire({
-            title: "Confirm Update",
-            text: "Are you sure you want to update this category?",
-            icon: "question",
-            width: "350px",
-            padding: "1.25rem",
-            showCancelButton: true,
-            confirmButtonColor: "#043570",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, update",
-            cancelButtonText: "Cancel",
-            didOpen: (popup) => {
-                const icon = popup.querySelector(".swal2-icon");
-                if (icon) icon.style.transform = "scale(0.7)";
-            },
-        });
-        if (!result.isConfirmed) return;
-
-        Update({ id, data })
+        const payload = {
+            name: data.name,
+            icon: data.icon,
+            image: data.image.url || data.image
+        }
+        
+        Update({ id, payload })
             .unwrap()
             .then((res) => {
                 if (res?.success || res?.status_code === 200) {
