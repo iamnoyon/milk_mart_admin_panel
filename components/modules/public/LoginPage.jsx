@@ -14,7 +14,7 @@ export default function LoginPage() {
     const [otpSent, setOtpSent] = useState(false);
     const { errorToaster, successToaster } = useToaster();
 
-    const [OTPSend, { isLoading: otpSendLoading }] = useSendLoginOTPMutation();
+    const [OTPSend, { data: otpRes, isLoading: otpSendLoading }] = useSendLoginOTPMutation();
 
     const handleOTPSend = async (e) => {
         e.preventDefault();
@@ -97,6 +97,7 @@ export default function LoginPage() {
                             <CheckCircle size={16} />
                             <span>OTP sent to {phone}</span>
                         </div>
+                        <div><h2>OTP: {otpRes?.OTP}</h2></div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1.5">
                                 Enter 5-Digit OTP
