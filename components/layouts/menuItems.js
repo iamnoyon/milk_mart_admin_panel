@@ -5,6 +5,7 @@ import {
   Users,
   FolderTree,
   Package,
+  Truck,
 } from "lucide-react";
 
 
@@ -15,6 +16,12 @@ export const menuItems = [
     path: "/dashboard",
     activePath: ["/dashboard"],
     // requiredPermissions: ["dashboard:read"]
+  },
+  {
+    name: "Assign Orders",
+    icon: Truck,
+    path: "/order-assignment",
+    activePath: ["/order-assignment"],
   },
   {
     name: "Users",
@@ -50,6 +57,13 @@ export const menuItems = [
 
 
 export const breadcrumbData = [
+  {
+    route: '/order-assignment',
+    items: [
+      { label: 'Dashboard', url: '/dashboard' },
+      { label: 'Assign Orders', url: '#' },
+    ]
+  },
   {
     route: '/user-management/users',
     items: [
