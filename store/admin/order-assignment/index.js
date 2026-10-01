@@ -17,7 +17,7 @@ export const orderAssignmentApiSlice = apiSlice.injectEndpoints({
         method: "GET",
         params,
       }),
-      providesTags: ["Orders", "OrderAssignment"],
+      providesTags: ["Orders"],
       transformResponse: (response) => transformListResponse(response),
     }),
     assignOrdersToDeliveryman: builder.mutation({
@@ -26,7 +26,7 @@ export const orderAssignmentApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["Orders", "OrderAssignment"],
+      invalidatesTags: ["Orders"],
     }),
   }),
   overrideExisting: true,

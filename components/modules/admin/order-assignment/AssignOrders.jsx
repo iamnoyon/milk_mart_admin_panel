@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import CardLayout from '@/components/common/CardLayout';
 import { useEffect, useMemo, useState } from 'react';
@@ -19,34 +19,52 @@ const AssignOrders = () => {
     const { successToaster, errorToaster } = useToaster();
 
     const [selectedDeliveryman, setSelectedDeliveryman] = useState(null);
-    const [pageAndLimit, setPageAndLimit] = useState({ page: 1, limit: 10 });
+    const [pageAndLimit, setPageAndLimit] = useState({
+        page: 1,
+        limit: 10,
+    });
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedOrderIds, setSelectedOrderIds] = useState([]);
     const [deliverymanSearch, setDeliverymanSearch] = useState('');
 
-    const { data: deliverymenData, isLoading: deliverymenLoading } =
-        useGetDeliverymanListQuery({ area: 'mirpurdosh' });
+    const {
+        data: deliverymenData,
+        isLoading: deliverymenLoading,
+    } = useGetDeliverymanListQuery({
+        area: 'mirpurdosh',
+    });
 
     const [
         triggerPendingOrders,
-        { data: pendingOrdersData, isLoading: pendingOrdersLoading },
+        {
+            data: pendingOrdersData,
+            isLoading: pendingOrdersLoading,
+        },
     ] = useLazyGetPendingOrdersQuery();
 
     const [assignOrders, { isLoading: assigning }] =
         useAssignOrdersToDeliverymanMutation();
 
-    useEffect(() => {
-        triggerPendingOrders({
+    const pendingOrdersParams = useMemo(
+        () => ({
             page: pageAndLimit.page,
             limit: pageAndLimit.limit,
-            status: 'pending'
-        });
-    }, [pageAndLimit]);
+            status: 'pending',
+        }),
+        [pageAndLimit]
+    );
+
+    useEffect(() => {
+        triggerPendingOrders(pendingOrdersParams);
+    }, [pendingOrdersParams, triggerPendingOrders]);
 
     const deliverymen = useMemo(() => {
         const list = deliverymenData?.dataSource || [];
+
         if (!deliverymanSearch) return list;
+
         const q = deliverymanSearch.toLowerCase();
+
         return list.filter(
             (d) =>
                 (d?.name || '').toLowerCase().includes(q) ||
@@ -56,6 +74,7 @@ const AssignOrders = () => {
 
     const toggleOrderSelection = (orderId) => {
         if (!orderId) return;
+
         setSelectedOrderIds((prev) =>
             prev.includes(orderId)
                 ? prev.filter((id) => id !== orderId)
@@ -65,10 +84,15 @@ const AssignOrders = () => {
 
     const toggleSelectAllOnPage = () => {
         const rows = pendingOrdersData?.dataSource || [];
-        const pageIds = rows.map((r) => r?.id).filter(Boolean);
+
+        const pageIds = rows
+            .map((r) => r?.id)
+            .filter(Boolean);
+
         const allSelected = pageIds.every((id) =>
             selectedOrderIds.includes(id)
         );
+
         if (allSelected) {
             setSelectedOrderIds((prev) =>
                 prev.filter((id) => !pageIds.includes(id))
@@ -76,7 +100,9 @@ const AssignOrders = () => {
         } else {
             setSelectedOrderIds((prev) => {
                 const set = new Set(prev);
+
                 pageIds.forEach((id) => set.add(id));
+
                 return Array.from(set);
             });
         }
@@ -87,6 +113,7 @@ const AssignOrders = () => {
             errorToaster('Please select a deliveryman first.');
             return;
         }
+
         if (selectedOrderIds.length === 0) {
             errorToaster('Please select at least one order to assign.');
             return;
@@ -102,16 +129,19 @@ const AssignOrders = () => {
                 successToaster(
                     res?.message || 'Orders assigned successfully!'
                 );
+
                 setSelectedOrderIds([]);
-                triggerPendingOrders({
-                    page: pageAndLimit.page,
-                    limit: pageAndLimit.limit,
-                });
+
+                triggerPendingOrders(pendingOrdersParams);
             } else {
-                errorToaster(res?.message || 'Failed to assign orders.');
+                errorToaster(
+                    res?.message || 'Failed to assign orders.'
+                );
             }
         } catch (err) {
-            errorToaster(err?.data?.message || 'Failed to assign orders.');
+            errorToaster(
+                err?.data?.message || 'Failed to assign orders.'
+            );
         }
     };
 
@@ -144,6 +174,7 @@ const AssignOrders = () => {
                 cell: (info) => {
                     const id = info.row.original?.id;
                     const checked = selectedOrderIds.includes(id);
+
                     return (
                         <input
                             type="checkbox"
@@ -156,6 +187,7 @@ const AssignOrders = () => {
                 },
                 enableSorting: false,
             }),
+
             columnHelper.accessor('sl', {
                 id: 'sl',
                 header: () => 'SL No.',
@@ -166,16 +198,20 @@ const AssignOrders = () => {
                 ),
                 enableSorting: false,
             }),
+
             columnHelper.accessor('order_number', {
                 id: 'order_number',
                 header: () => 'Order No.',
                 cell: (info) => (
-                    <span className="font-['DM_Sans',sans-serif] text-sm text-[#1f2937] font-medium">
-                        {info.getValue() ?? info.row.original?.id ?? '-'}
+                    <span className="font-['DM_Sans',sans-serif] text-sm font-medium text-[#1f2937]">
+                        {info.getValue() ??
+                            info.row.original?.id ??
+                            '-'}
                     </span>
                 ),
                 enableSorting: true,
             }),
+
             columnHelper.accessor('user', {
                 id: 'user',
                 header: () => 'Customer',
@@ -186,6 +222,7 @@ const AssignOrders = () => {
                 ),
                 enableSorting: false,
             }),
+
             columnHelper.accessor('phone', {
                 id: 'phone',
                 header: () => 'Phone',
@@ -196,24 +233,30 @@ const AssignOrders = () => {
                 ),
                 enableSorting: false,
             }),
+
             columnHelper.accessor('address', {
                 id: 'address',
                 header: () => 'Address / Avenue / Road',
                 cell: (info) => (
                     <span className="font-['DM_Sans',sans-serif] text-sm text-[#1f2937]">
-                        {info.row.original.user.location.area ?? '-'} / {info.row.original.user.location.avenue ?? '-'} / {info.row.original.user.location.road ?? '-'}
+                        {info.row.original.user.location.area ?? '-'} /{' '}
+                        {info.row.original.user.location.avenue ?? '-'} /{' '}
+                        {info.row.original.user.location.road ?? '-'}
                     </span>
                 ),
                 enableSorting: false,
             }),
+
             columnHelper.accessor('total_price', {
                 id: 'total_price',
                 header: () => 'Amount',
                 cell: (info) => {
                     const amount = info.getValue();
+
                     return (
                         <span className="font-['DM_Sans',sans-serif] text-sm text-[#1f2937]">
-                            {amount !== undefined && amount !== null
+                            {amount !== undefined &&
+                            amount !== null
                                 ? `৳ ${Number(amount).toFixed(2)}`
                                 : '-'}
                         </span>
@@ -221,24 +264,27 @@ const AssignOrders = () => {
                 },
                 enableSorting: true,
             }),
+
             columnHelper.accessor('status', {
                 id: 'status',
                 header: () => 'Status',
                 cell: (info) => {
                     const status = info.getValue() || 'pending';
+
                     const statusColor =
                         status === 'pending'
                             ? 'bg-amber-500'
                             : status === 'ready'
-                                ? 'bg-blue-500'
-                                : 'bg-gray-500';
+                              ? 'bg-blue-500'
+                              : 'bg-gray-500';
+
                     return (
                         <span
                             className={`inline-block rounded-full px-3 py-1 text-[0.875rem] font-medium text-white ${statusColor}`}
                         >
                             {status
                                 ? status.charAt(0).toUpperCase() +
-                                status.slice(1)
+                                  status.slice(1)
                                 : 'Pending'}
                         </span>
                     );
@@ -251,9 +297,14 @@ const AssignOrders = () => {
     );
 
     const selectedDeliverymanName = useMemo(() => {
-        const found = (deliverymenData?.dataSource || []).find(
-            (d) => String(d?.id) === String(selectedDeliveryman)
+        const found = (
+            deliverymenData?.dataSource || []
+        ).find(
+            (d) =>
+                String(d?.id) ===
+                String(selectedDeliveryman)
         );
+
         return found?.name || '';
     }, [deliverymenData, selectedDeliveryman]);
 
@@ -261,7 +312,6 @@ const AssignOrders = () => {
         <div className="space-y-5">
             <CardLayout title="Assign Orders" titleIcon={Truck}>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                    {/* Deliveryman Select */}
                     <div className="md:col-span-2">
                         <label className="mb-1.5 block text-sm font-medium text-gray-800">
                             Select Deliveryman{' '}
@@ -271,24 +321,14 @@ const AssignOrders = () => {
                         <select
                             value={selectedDeliveryman || ''}
                             onChange={(e) =>
-                                setSelectedDeliveryman(e.target.value || null)
+                                setSelectedDeliveryman(
+                                    e.target.value || null
+                                )
                             }
-                            disabled={deliverymenLoading || assigning}
-                            className="
-                    h-10 w-full rounded-lg
-                    border border-gray-300
-                    bg-white px-3
-                    text-sm text-gray-800
-                    shadow-sm
-                    outline-none
-                    transition
-                    hover:border-gray-400
-                    focus:border-[#0A4D99]
-                    focus:ring-2 focus:ring-[#0A4D99]/10
-                    disabled:cursor-not-allowed
-                    disabled:bg-gray-50
-                    disabled:text-gray-400
-                "
+                            disabled={
+                                deliverymenLoading || assigning
+                            }
+                            className="h-10 w-full rounded-lg border border-gray-300 bg-white px-3 text-sm text-gray-800 shadow-sm outline-none transition hover:border-gray-400 focus:border-[#0A4D99] focus:ring-2 focus:ring-[#0A4D99]/10 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-400"
                         >
                             <option value="">
                                 {deliverymenLoading
@@ -297,17 +337,21 @@ const AssignOrders = () => {
                             </option>
 
                             {deliverymen.map((d) => (
-                                <option key={d?.id} value={d?.id}>
+                                <option
+                                    key={d?.id}
+                                    value={d?.id}
+                                >
                                     {d?.name}
-                                    {d?.phone ? ` (${d?.phone})` : ''}
+                                    {d?.phone
+                                        ? ` (${d?.phone})`
+                                        : ''}
                                 </option>
                             ))}
                         </select>
                     </div>
 
-                    {/* Assign Button */}
                     <div className="flex flex-col">
-                        <label className="mb-1.5 block text-sm font-medium text-transparent select-none">
+                        <label className="mb-1.5 block select-none text-sm font-medium text-transparent">
                             Action
                         </label>
 
@@ -319,20 +363,7 @@ const AssignOrders = () => {
                                 selectedOrderIds.length === 0 ||
                                 assigning
                             }
-                            className="
-                    h-10 w-full rounded-lg
-                    bg-[#0A4D99]
-                    px-4
-                    text-sm font-semibold text-white
-                    shadow-sm
-                    transition-all duration-200
-                    hover:bg-[#053872]
-                    active:scale-[0.99]
-                    disabled:cursor-not-allowed
-                    disabled:bg-gray-300
-                    disabled:text-gray-500
-                    disabled:shadow-none
-                "
+                            className="h-10 w-full rounded-lg bg-[#0A4D99] px-4 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#053872] active:scale-[0.99] disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-500 disabled:shadow-none"
                         >
                             {assigning ? (
                                 <span className="flex items-center justify-center gap-2">
@@ -349,12 +380,10 @@ const AssignOrders = () => {
                         </button>
                     </div>
 
-                    {/* Selected Deliveryman Info */}
-                    <div className="md:col-span-3 min-h-[20px]">
+                    <div className="min-h-[20px] md:col-span-3">
                         {selectedDeliverymanName && (
                             <div className="flex items-center gap-1.5 text-xs text-gray-500">
                                 <span>Assigning to:</span>
-
                                 <span className="font-semibold text-gray-700">
                                     {selectedDeliverymanName}
                                 </span>
@@ -373,22 +402,32 @@ const AssignOrders = () => {
                 ) : (
                     <ReactTable
                         columns={columns}
-                        dataSource={pendingOrdersData?.dataSource || []}
-                        totalRecords={pendingOrdersData?.totalRecords}
+                        dataSource={
+                            pendingOrdersData?.dataSource || []
+                        }
+                        totalRecords={
+                            pendingOrdersData?.totalRecords
+                        }
                         pageAndLimit={pageAndLimit}
                         showPageSizeDropdown={
                             (pendingOrdersData?.totalRecords || 0) >
                             pageAndLimit.limit
                         }
-                        paginationOn={pendingOrdersData?.paginationOn}
+                        paginationOn={
+                            pendingOrdersData?.paginationOn
+                        }
                         searchQuery={searchQuery}
                         onSearchChange={setSearchQuery}
                         onPageLimitChange={({ page, limit }) => {
-                            setPageAndLimit({ page, limit });
+                            setPageAndLimit({
+                                page,
+                                limit,
+                            });
                             setSelectedOrderIds([]);
                         }}
                     />
                 )}
+
                 {!pendingOrdersLoading &&
                     (pendingOrdersData?.dataSource || []).length > 0 && (
                         <p className="mt-2 text-xs text-gray-500">
