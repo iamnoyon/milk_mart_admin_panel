@@ -5,7 +5,7 @@ export const orderAssignmentApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getDeliverymanList: builder.query({
       query: (params) => ({
-        url: "/users/deliverymen",
+        url: "/user/deliveryman",
         method: "GET",
         params,
       }),
@@ -22,7 +22,7 @@ export const orderAssignmentApiSlice = apiSlice.injectEndpoints({
     }),
     assignOrdersToDeliveryman: builder.mutation({
       query: (data) => ({
-        url: "/orders/assign",
+        url: "/orders/assign-bulk",
         method: "POST",
         body: data,
       }),

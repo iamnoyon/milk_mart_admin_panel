@@ -4,45 +4,80 @@
 import React from "react";
 import Select from "react-select";
 import { Controller, useFormContext } from "react-hook-form";
+import { useTheme } from "@/components/providers/ThemeProvider";
 
-const defaultStyles = {
+const getStyles = (isDark) => ({
   control: (provided, state) => ({
     ...provided,
     minHeight: "44px",
     borderRadius: "10px",
+    backgroundColor: isDark ? "#172033" : "transparent",
     borderColor: state.isFocused
-      ? "#000"
-      : "#d1d5db",
+      ? isDark
+        ? "#7fb7ef"
+        : "#000"
+      : isDark
+        ? "#3d4e6b"
+        : "#d1d5db",
     boxShadow: "none",
     "&:hover": {
-      borderColor: "#000",
+      borderColor: isDark ? "#7fb7ef" : "#000",
     },
   }),
 
   option: (provided, state) => ({
     ...provided,
     backgroundColor: state.isSelected
-      ? "#000"
+      ? isDark
+        ? "#2f6db3"
+        : "#000"
       : state.isFocused
-      ? "#f3f4f6"
-      : "#fff",
-    color: state.isSelected ? "#fff" : "#111827",
+        ? isDark
+          ? "#1e2942"
+          : "#f3f4f6"
+        : isDark
+          ? "#172033"
+          : "#fff",
+    color: state.isSelected ? "#fff" : isDark ? "#e8eef7" : "#111827",
     cursor: "pointer",
   }),
 
   placeholder: (provided) => ({
     ...provided,
-    color: "#9ca3af",
+    color: isDark ? "#7b8aa1" : "#9ca3af",
+  }),
+
+  input: (provided) => ({
+    ...provided,
+    color: isDark ? "#e8eef7" : "#111827",
   }),
 
   menu: (provided) => ({
     ...provided,
     zIndex: 9999,
+    backgroundColor: isDark ? "#172033" : "#fff",
+    borderColor: isDark ? "#2e3d57" : "#e5e7eb",
+    boxShadow: isDark ? "0 10px 30px rgb(0 0 0 / 0.45)" : undefined,
+  }),
+
+  menuList: (provided) => ({
+    ...provided,
+    backgroundColor: isDark ? "#172033" : "#fff",
+  }),
+
+  noOptionsMessage: (provided) => ({
+    ...provided,
+    color: isDark ? "#8d9bb0" : "#9ca3af",
+  }),
+
+  groupHeading: (provided) => ({
+    ...provided,
+    color: isDark ? "#8d9bb0" : "#6b7280",
   }),
 
   multiValue: (provided) => ({
     ...provided,
-    backgroundColor: "#000",
+    backgroundColor: isDark ? "#2c3b56" : "#000",
     borderRadius: "6px",
   }),
 
@@ -61,7 +96,7 @@ const defaultStyles = {
       color: "#fff",
     },
   }),
-};
+});
 
 const FormSelect = ({
   name,
@@ -108,9 +143,11 @@ const FormSelect = ({
     raw: item,
   }));
 
+  const { theme } = useTheme();
+
   // merge styles
   const mergedStyles = {
-    ...defaultStyles,
+    ...getStyles(theme === "dark"),
     ...customStyles,
   };
 

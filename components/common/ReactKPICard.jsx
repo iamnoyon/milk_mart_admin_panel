@@ -1,5 +1,8 @@
 "use client";
 
+import { useTheme } from "@/components/providers/ThemeProvider";
+import { chartColors } from "@/utils/chartColors";
+
 const STATUS_COLORS = {
     healthy: "#16A34A",
     unhealthy: "#EF4444",
@@ -10,18 +13,19 @@ const STATUS_COLORS = {
     down: "#EF4444",
 };
 
-function getValueColor(item) {
+function getValueColor(item, isDark = false) {
+    const fallback = isDark ? "#94a3b8" : "#6b7280";
     if (item.color) return item.color;
     if (typeof item.value === "string") {
         const key = item.value.toLowerCase();
-        return STATUS_COLORS[key] || "#6b7280";
+        return STATUS_COLORS[key] || fallback;
     }
     if (typeof item.value === "number") {
         if (item.value >= 90) return "#EF4444";
         if (item.value >= 70) return "#F59E0B";
         return "#16A34A";
     }
-    return "#6b7280";
+    return fallback;
 }
 
 function renderValue(item) {
@@ -43,6 +47,8 @@ export default function ReactKPICard({
     valueFormatter,
     gridCols = 2,
 }) {
+    const { theme } = useTheme();
+    const c = chartColors(theme === "dark");
 
     return (
         <div
@@ -50,9 +56,9 @@ export default function ReactKPICard({
             style={{
                 width: "100%",
                 height,
-                backgroundColor: "#fff",
+                backgroundColor: c.cardBg,
                 borderRadius: 12,
-                boxShadow: "0 2px 8px rgba(15, 23, 42, 0.08)",
+                boxShadow: c.cardShadow,
                 padding: 20,
             }}
         >
@@ -61,7 +67,7 @@ export default function ReactKPICard({
                     style={{
                         fontSize: 14,
                         fontWeight: 600,
-                        color: "#111827",
+                        color: c.title,
                         marginBottom: 16,
                     }}
                 >
@@ -83,8 +89,8 @@ export default function ReactKPICard({
                             style={{
                                 padding: 14,
                                 borderRadius: 10,
-                                backgroundColor: "#f9fafb",
-                                border: "1px solid #f3f4f6",
+                                backgroundColor: c.surface,
+                                border: `1px solid ${c.surfaceBorder}`,
                             }}
                         >
                             <div className="mb-2 flex items-center gap-2">
@@ -93,7 +99,7 @@ export default function ReactKPICard({
                                         width: 12,
                                         height: 12,
                                         borderRadius: "50%",
-                                        backgroundColor: "#e5e7eb",
+                                        backgroundColor: c.skeleton,
                                     }}
                                 />
                                 <div
@@ -101,7 +107,7 @@ export default function ReactKPICard({
                                         width: "60%",
                                         height: 12,
                                         borderRadius: 4,
-                                        backgroundColor: "#e5e7eb",
+                                        backgroundColor: c.skeleton,
                                     }}
                                 />
                             </div>
@@ -110,7 +116,7 @@ export default function ReactKPICard({
                                     width: "40%",
                                     height: 20,
                                     borderRadius: 4,
-                                    backgroundColor: "#e5e7eb",
+                                    backgroundColor: c.skeleton,
                                     marginLeft: 20,
                                 }}
                             />
@@ -125,7 +131,7 @@ export default function ReactKPICard({
                     }}
                 >
                     {data.map((item, index) => {
-                        const color = getValueColor(item);
+                        const color = getValueColor(item, theme === "dark");
 
                         return (
                             <div
@@ -133,7 +139,7 @@ export default function ReactKPICard({
                                 style={{
                                     padding: 14,
                                     borderRadius: 10,
-                                    backgroundColor: "#f9fafb",
+                                    backgroundColor: c.surface,
                                     border: `1px solid ${color}20`,
                                     borderLeft: `3px solid ${color}`,
                                 }}
@@ -152,7 +158,7 @@ export default function ReactKPICard({
                                     <span
                                         style={{
                                             fontSize: 12,
-                                            color: "#6b7280",
+                                            color: c.subtleText,
                                         }}
                                     >
                                         {item.name}

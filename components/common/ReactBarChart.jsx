@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import * as echarts from "echarts";
+import { useTheme } from "@/components/providers/ThemeProvider";
+import { chartColors } from "@/utils/chartColors";
 
 export default function ReactBarChart({
     data = [],
@@ -20,8 +22,12 @@ export default function ReactBarChart({
     loading = false,
 }) {
     const chartRef = useRef(null);
+    const { theme } = useTheme();
+    const isDark = theme === "dark";
+    const cardColors = chartColors(isDark);
 
     useEffect(() => {
+        const c = chartColors(theme === "dark");
         if (loading || !chartRef.current || !data?.length) return;
 
         const dom = chartRef.current;
@@ -42,7 +48,7 @@ export default function ReactBarChart({
                     textStyle: {
                         fontSize: 14,
                         fontWeight: 600,
-                        color: "#111827",
+                        color: c.title,
                         fontFamily: "Manrope, sans-serif",
                     },
                 }
@@ -79,7 +85,7 @@ export default function ReactBarChart({
                 data: labels,
 
                 axisLabel: {
-                    color: "#374151",
+                    color: c.axisLabel,
                     fontSize: 12,
                     fontFamily: "Manrope, sans-serif",
                     rotate: 0,
@@ -87,7 +93,7 @@ export default function ReactBarChart({
 
                 axisLine: {
                     lineStyle: {
-                        color: "#e5e7eb",
+                        color: c.axisLine,
                     },
                 },
 
@@ -100,7 +106,7 @@ export default function ReactBarChart({
                 nameGap: 26,
 
                 nameTextStyle: {
-                    color: "#1f2937",
+                    color: c.axisName,
                     fontSize: 13,
                     fontFamily: "Manrope, sans-serif",
                 },
@@ -110,27 +116,27 @@ export default function ReactBarChart({
                 type: "value",
 
                 axisLabel: {
-                    color: "#374151",
+                    color: c.axisLabel,
                     fontSize: 12,
                     fontFamily: "Manrope, sans-serif",
                 },
 
                 axisLine: {
                     lineStyle: {
-                        color: "#e5e7eb",
+                        color: c.axisLine,
                     },
                 },
 
                 splitLine: {
                     lineStyle: {
-                        color: "#f3f4f6",
+                        color: c.splitLine,
                     },
                 },
 
                 name: yAxisName,
 
                 nameTextStyle: {
-                    color: "#1f2937",
+                    color: c.axisName,
                     fontSize: 13,
                     fontFamily: "Manrope, sans-serif",
                 },
@@ -192,6 +198,7 @@ export default function ReactBarChart({
         data,
         formatter,
         loading,
+        theme,
         title,
         xAxisName,
         xKey,
@@ -205,10 +212,10 @@ export default function ReactBarChart({
             style={{
                 width: "100%",
                 height,
-                backgroundColor: "#fff",
+                backgroundColor: cardColors.cardBg,
                 borderRadius: 12,
                 boxShadow:
-                    "0 2px 8px rgba(15, 23, 42, 0.08)",
+                    cardColors.cardShadow,
                 padding: 8,
             }}
         >

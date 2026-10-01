@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import * as echarts from "echarts";
+import { useTheme } from "@/components/providers/ThemeProvider";
+import { chartColors } from "@/utils/chartColors";
 
 const DEFAULT_COLORS = [
     "#0DB8F5",
@@ -37,8 +39,11 @@ export default function ReactPieChart({
 }) {
     const chartRef = useRef(null);
     const instanceRef = useRef(null);
+    const { theme } = useTheme();
+    const cardColors = chartColors(theme === "dark");
 
     useEffect(() => {
+        const c = chartColors(theme === "dark");
         if (loading || !data?.length) return;
 
         const dom = chartRef.current;
@@ -54,13 +59,16 @@ export default function ReactPieChart({
                 left: "center",
                 textStyle: {
                     fontFamily: "Manrope, sans-serif",
+                    color: c.title,
                 },
             },
 
             tooltip: {
                 trigger: "item",
+                backgroundColor: c.tooltipBg,
                 textStyle: {
                     fontFamily: "Manrope, sans-serif",
+                    color: c.tooltipText,
                 },
             },
 
@@ -69,6 +77,7 @@ export default function ReactPieChart({
                 left: "left",
                 textStyle: {
                     fontFamily: "Manrope, sans-serif",
+                    color: c.legend,
                 },
             },
 
@@ -112,7 +121,7 @@ export default function ReactPieChart({
                 instanceRef.current = null;
             }
         };
-    }, [data, loading, title, colors, radius, name]);
+    }, [data, loading, theme, title, colors, radius, name]);
 
     return (
         <div
@@ -120,9 +129,9 @@ export default function ReactPieChart({
             style={{
                 width: "100%",
                 height,
-                backgroundColor: "#fff",
+                backgroundColor: cardColors.cardBg,
                 borderRadius: 12,
-                boxShadow: "0 2px 8px rgba(15, 23, 42, 0.08)",
+                boxShadow: cardColors.cardShadow,
                 padding: 8,
             }}
         >
@@ -137,8 +146,7 @@ export default function ReactPieChart({
                             height: "60%",
                             maxWidth: 200,
                             maxHeight: 200,
-                            background:
-                                "conic-gradient(#e5e7eb 0deg 90deg, #f3f4f6 90deg 180deg, #e5e7eb 180deg 270deg, #f3f4f6 270deg 360deg)",
+                            background: `conic-gradient(${cardColors.skeleton} 0deg 90deg, ${cardColors.skeletonAlt} 90deg 180deg, ${cardColors.skeleton} 180deg 270deg, ${cardColors.skeletonAlt} 270deg 360deg)`,
                             borderRadius: "50%",
                         }}
                     />

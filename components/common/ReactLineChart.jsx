@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import * as echarts from "echarts";
+import { useTheme } from "@/components/providers/ThemeProvider";
+import { chartColors } from "@/utils/chartColors";
 
 const DEFAULT_COLORS = [
     "#0DB8F5",
@@ -40,8 +42,11 @@ export default function ReactLineChart({
 }) {
     const chartRef = useRef(null);
     const instanceRef = useRef(null);
+    const { theme } = useTheme();
+    const cardColors = chartColors(theme === "dark");
 
     useEffect(() => {
+        const c = chartColors(theme === "dark");
         if (loading || !data?.labels?.length || !data?.datasets?.length) return;
 
         const dom = chartRef.current;
@@ -93,7 +98,7 @@ export default function ReactLineChart({
                       textStyle: {
                           fontSize: 14,
                           fontWeight: 600,
-                          color: "#111827",
+                          color: c.title,
                           fontFamily: "Manrope, sans-serif",
                       },
                   }
@@ -122,7 +127,7 @@ export default function ReactLineChart({
                       textStyle: {
                           fontFamily: "Manrope, sans-serif",
                           fontSize: 11,
-                          color: "#374151",
+                          color: c.legend,
                       },
                       itemWidth: 14,
                       itemHeight: 8,
@@ -143,20 +148,20 @@ export default function ReactLineChart({
                 data: data.labels,
                 boundaryGap: false,
                 axisLabel: {
-                    color: "#374151",
+                    color: c.axisLabel,
                     fontSize: 11,
                     fontFamily: "Manrope, sans-serif",
                     rotate: data.labels.length > 12 ? 45 : 0,
                 },
                 axisLine: {
-                    lineStyle: { color: "#e5e7eb" },
+                    lineStyle: { color: c.axisLine },
                 },
                 axisTick: { show: false },
                 name: xAxisName,
                 nameLocation: "middle",
                 nameGap: 26,
                 nameTextStyle: {
-                    color: "#1f2937",
+                    color: c.axisName,
                     fontSize: 12,
                     fontFamily: "Manrope, sans-serif",
                 },
@@ -165,19 +170,19 @@ export default function ReactLineChart({
             yAxis: {
                 type: "value",
                 axisLabel: {
-                    color: "#374151",
+                    color: c.axisLabel,
                     fontSize: 11,
                     fontFamily: "Manrope, sans-serif",
                 },
                 axisLine: {
-                    lineStyle: { color: "#e5e7eb" },
+                    lineStyle: { color: c.axisLine },
                 },
                 splitLine: {
-                    lineStyle: { color: "#f3f4f6" },
+                    lineStyle: { color: c.splitLine },
                 },
                 name: yAxisName,
                 nameTextStyle: {
-                    color: "#1f2937",
+                    color: c.axisName,
                     fontSize: 12,
                     fontFamily: "Manrope, sans-serif",
                 },
@@ -203,7 +208,7 @@ export default function ReactLineChart({
                 instanceRef.current = null;
             }
         };
-    }, [data, loading, title, colors, smooth, showArea, showLegend, yAxisName, xAxisName]);
+    }, [data, loading, theme, title, colors, smooth, showArea, showLegend, yAxisName, xAxisName]);
 
     return (
         <div
@@ -211,9 +216,9 @@ export default function ReactLineChart({
             style={{
                 width: "100%",
                 height,
-                backgroundColor: "#fff",
+                backgroundColor: cardColors.cardBg,
                 borderRadius: 12,
-                boxShadow: "0 2px 8px rgba(15, 23, 42, 0.08)",
+                boxShadow: cardColors.cardShadow,
                 padding: 8,
             }}
         >

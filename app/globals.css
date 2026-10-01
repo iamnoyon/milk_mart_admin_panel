@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 html {
   scroll-behavior: smooth;
 }
@@ -7,6 +9,11 @@ html {
 :root {
   --background: #ffffff;
   --foreground: #171717;
+}
+
+.dark {
+  --background: #0b1220;
+  --foreground: #e8eef7;
 }
 
 @theme inline {
@@ -62,4 +69,500 @@ body {
 
 @utility animate-slide-up {
   animation: slide-up 0.3s ease-out;
+}
+
+/* =========================================================
+   Dark theme — driven by NEXT_PUBLIC_THEME in .env (dark | light)
+   The `dark` class is rendered on <html> by the root layout, so the
+   shared light palette below is repainted in place. No component
+   changes are required for gray/white surfaces, text or borders.
+   ========================================================= */
+
+/* ── Surfaces ── */
+.dark .bg-white,
+.dark .hover\:bg-white:hover,
+.dark .bg-white\/80 {
+  background-color: #172033;
+}
+
+.dark .bg-gray-50,
+.dark .bg-slate-50,
+.dark .bg-\[\#f9fafb\],
+.dark .bg-\[\#fcfcfc\] {
+  background-color: #131c2e;
+}
+
+.dark .hover\:bg-gray-50:hover,
+.dark .hover\:bg-slate-50:hover,
+.dark .hover\:bg-\[\#f3f4f6\]:hover {
+  background-color: #1c2740;
+}
+
+.dark .bg-gray-100 {
+  background-color: #0b1220;
+}
+
+.dark .hover\:bg-gray-100:hover {
+  background-color: #1e2942;
+}
+
+.dark .bg-gray-200 {
+  background-color: #0f172a;
+}
+
+.dark .bg-\[\#e5e7eb\],
+.dark .bg-slate-100,
+.dark .hover\:bg-slate-100:hover {
+  background-color: #26344c;
+}
+
+.dark .bg-slate-200 {
+  background-color: #2c3b56;
+}
+
+.dark .bg-black {
+  background-color: #1e2942;
+}
+
+/* ── Text ── */
+.dark .text-gray-900,
+.dark .text-\[\#1f2937\] {
+  color: #e8eef7;
+}
+
+.dark .text-gray-800 {
+  color: #dfe8f5;
+}
+
+.dark .text-gray-700,
+.dark .hover\:text-gray-700:hover {
+  color: #c7d2e0;
+}
+
+.dark .text-gray-600,
+.dark .hover\:text-gray-600:hover,
+.dark .text-\[\#595959\] {
+  color: #a4b1c4;
+}
+
+.dark .text-gray-500 {
+  color: #8d9bb0;
+}
+
+.dark .text-gray-400 {
+  color: #7b8aa1;
+}
+
+.dark .text-gray-300 {
+  color: #b9c4d4;
+}
+
+.dark .text-black,
+.dark .hover\:text-gray-900:hover {
+  color: #f1f5f9;
+}
+
+.dark .text-slate-900 {
+  color: #f1f5f9;
+}
+
+.dark .text-slate-800 {
+  color: #e2e8f0;
+}
+
+.dark .text-slate-700 {
+  color: #cbd5e1;
+}
+
+.dark .text-slate-500 {
+  color: #94a3b8;
+}
+
+/* Brand navy text (readable accent on dark surfaces) */
+.dark .text-\[\#043570\],
+.dark .text-\[\#0A4D99\],
+.dark .text-\[\#042A55\],
+.dark .text-\[\#02162e\],
+.dark .hover\:text-\[\#0A4D99\]:hover {
+  color: #7fb7ef;
+}
+
+/* ── Status / accent text ── */
+.dark .text-red-500,
+.dark .hover\:text-red-700:hover {
+  color: #f87171;
+}
+
+.dark .text-red-600 {
+  color: #fca5a5;
+}
+
+.dark .text-red-700 {
+  color: #fca5a5;
+}
+
+.dark .text-red-800 {
+  color: #fecaca;
+}
+
+.dark .text-green-500,
+.dark .text-green-600 {
+  color: #4ade80;
+}
+
+.dark .text-green-700 {
+  color: #86efac;
+}
+
+.dark .text-green-800 {
+  color: #bbf7d0;
+}
+
+.dark .text-emerald-700 {
+  color: #6ee7b7;
+}
+
+.dark .text-amber-700 {
+  color: #fcd34d;
+}
+
+.dark .text-amber-800,
+.dark .text-yellow-800 {
+  color: #fde68a;
+}
+
+.dark .text-orange-700 {
+  color: #fdba74;
+}
+
+.dark .text-orange-800 {
+  color: #fed7aa;
+}
+
+.dark .text-purple-700 {
+  color: #d8b4fe;
+}
+
+.dark .text-purple-800 {
+  color: #e9d5ff;
+}
+
+.dark .text-pink-800 {
+  color: #f9a8d4;
+}
+
+.dark .text-teal-800 {
+  color: #5eead4;
+}
+
+.dark .text-blue-500,
+.dark .text-blue-600 {
+  color: #60a5fa;
+}
+
+.dark .text-blue-700 {
+  color: #93c5fd;
+}
+
+.dark .text-blue-800 {
+  color: #bfdbfe;
+}
+
+/* ── Tinted badges / alerts ── */
+.dark .bg-red-50,
+.dark .hover\:bg-red-50:hover {
+  background-color: #3a161c;
+}
+
+.dark .bg-red-100 {
+  background-color: #4a1c24;
+}
+
+.dark .bg-green-50 {
+  background-color: #10261a;
+}
+
+.dark .bg-green-100 {
+  background-color: #14301f;
+}
+
+.dark .bg-blue-50 {
+  background-color: #14263f;
+}
+
+.dark .bg-blue-100 {
+  background-color: #1b3354;
+}
+
+.dark .bg-purple-100 {
+  background-color: #2c2352;
+}
+
+.dark .bg-amber-100,
+.dark .hover\:bg-amber-100:hover {
+  background-color: #3a2c10;
+}
+
+.dark .bg-yellow-100 {
+  background-color: #3a3412;
+}
+
+.dark .bg-orange-100 {
+  background-color: #3d2410;
+}
+
+.dark .bg-emerald-100 {
+  background-color: #123728;
+}
+
+.dark .bg-teal-100 {
+  background-color: #10373a;
+}
+
+.dark .bg-pink-100 {
+  background-color: #3d1f36;
+}
+
+/* ── Borders & dividers ── */
+.dark .border-white {
+  border-color: #2e3d57;
+}
+
+.dark .border-black,
+.dark .hover\:border-black:hover,
+.dark .focus\:border-black:focus {
+  border-color: #41526e;
+}
+
+.dark .border-gray-300,
+.dark .focus\:border-gray-300:focus {
+  border-color: #3d4e6b;
+}
+
+.dark .border-gray-200,
+.dark .border-\[\#e5e7eb\],
+.dark .border-\[\#d9d9d9\],
+.dark .border-slate-200 {
+  border-color: #2e3d57;
+}
+
+.dark .border-gray-100,
+.dark .divide-gray-100 > :not(:last-child),
+.dark .divide-\[\#e5e7eb\] > :not(:last-child) {
+  border-color: #26344c;
+}
+
+.dark .focus\:border-gray-400:focus {
+  border-color: #4a5c7a;
+}
+
+.dark .border-slate-400 {
+  border-color: #5b6b82;
+}
+
+.dark .border-red-100 {
+  border-color: #5b222b;
+}
+
+.dark .border-red-200 {
+  border-color: #7f3138;
+}
+
+.dark .border-red-300 {
+  border-color: #a0424b;
+}
+
+.dark .border-green-200 {
+  border-color: #1f5137;
+}
+
+.dark .border-green-300 {
+  border-color: #2f7a4f;
+}
+
+.dark .border-blue-200 {
+  border-color: #274b7d;
+}
+
+.dark .border-blue-300 {
+  border-color: #35639c;
+}
+
+.dark .border-amber-200 {
+  border-color: #6b5316;
+}
+
+.dark .border-amber-300 {
+  border-color: #8a6a1e;
+}
+
+.dark .border-orange-200 {
+  border-color: #7a4416;
+}
+
+.dark .border-orange-300 {
+  border-color: #96571f;
+}
+
+.dark .border-purple-200 {
+  border-color: #443a7a;
+}
+
+.dark .border-purple-300 {
+  border-color: #574a99;
+}
+
+.dark .border-pink-300 {
+  border-color: #9d4a7d;
+}
+
+.dark .border-teal-300 {
+  border-color: #2c7a74;
+}
+
+/* ── Focus rings ── */
+.dark .focus\:ring-gray-300:focus,
+.dark .focus\:ring-slate-200:focus {
+  --tw-ring-color: #41526e;
+}
+
+.dark .focus\:ring-slate-900:focus {
+  --tw-ring-color: #94a3b8;
+}
+
+.dark .focus\:ring-black\/40:focus {
+  --tw-ring-color: rgb(148 163 184 / 0.4);
+}
+
+.dark .focus\:ring-\[\#042A55\]:focus,
+.dark .focus\:border-\[\#0A4D99\]:focus {
+  --tw-ring-color: #7fb7ef;
+  border-color: #7fb7ef;
+}
+
+.dark .focus\:ring-blue-100:focus {
+  --tw-ring-color: #1b3354;
+}
+
+/* ── Gradient stops (light decorative washes) ── */
+.dark .from-gray-50 {
+  --tw-gradient-from: #131c2e;
+  --tw-gradient-to: rgb(19 28 46 / 0);
+}
+
+.dark .via-blue-50\/30 {
+  --tw-gradient-via: rgb(59 130 246 / 0.14);
+}
+
+.dark .to-indigo-50\/20 {
+  --tw-gradient-to: rgb(99 102 241 / 0.16);
+}
+
+/* ── Form controls ── */
+.dark input::placeholder,
+.dark textarea::placeholder,
+.dark [contenteditable]::placeholder {
+  color: #7b8aa1;
+}
+
+.dark select option {
+  background-color: #172033;
+  color: #e8eef7;
+}
+
+/* ── Scrollbars ── */
+.dark * {
+  scrollbar-width: thin;
+  scrollbar-color: #3d4e6b transparent;
+}
+
+.dark ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background-color: #3d4e6b;
+  border-radius: 8px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ── Quill editor (react-quill-new "snow" theme) ── */
+.dark .ql-toolbar.ql-snow,
+.dark .ql-container.ql-snow {
+  border-color: #2e3d57;
+  background: #172033;
+}
+
+.dark .ql-toolbar.ql-snow .ql-picker-label,
+.dark .ql-toolbar.ql-snow .ql-picker-title {
+  color: #a4b1c4;
+}
+
+.dark .ql-snow .ql-stroke {
+  stroke: #a4b1c4;
+}
+
+.dark .ql-snow .ql-fill,
+.dark .ql-snow .ql-stroke.ql-fill {
+  fill: #a4b1c4;
+}
+
+.dark .ql-snow .ql-picker-options {
+  background: #172033;
+  border-color: #2e3d57;
+}
+
+.dark .ql-editor.ql-blank::before {
+  color: #7b8aa1;
+}
+
+.dark .ql-snow .ql-tooltip {
+  background: #1e2942;
+  border-color: #2e3d57;
+  color: #e8eef7;
+  box-shadow: none;
+}
+
+.dark .ql-snow .ql-tooltip input[type="text"] {
+  background: #172033;
+  border-color: #3d4e6b;
+  color: #e8eef7;
+}
+
+/* ── SweetAlert2 ── */
+.dark .swal2-popup {
+  background: #172033;
+  color: #e8eef7;
+}
+
+.dark .swal2-title {
+  color: #e8eef7;
+}
+
+.dark .swal2-html-container {
+  color: #c7d2e0;
+}
+
+.dark .swal2-input,
+.dark .swal2-textarea,
+.dark .swal2-select,
+.dark .swal2-checkbox {
+  background: #0f172a;
+  border-color: #3d4e6b;
+  color: #e8eef7;
+}
+
+.dark .swal2-input:focus,
+.dark .swal2-textarea:focus,
+.dark .swal2-select:focus {
+  border-color: #7fb7ef;
+  box-shadow: none;
+}
+
+.dark .swal2-icon-ring {
+  background: #1e2942;
 }

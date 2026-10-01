@@ -25,7 +25,7 @@ const AssignOrders = () => {
     const [deliverymanSearch, setDeliverymanSearch] = useState('');
 
     const { data: deliverymenData, isLoading: deliverymenLoading } =
-        useGetDeliverymanListQuery();
+        useGetDeliverymanListQuery({ area: 'mirpurdosh' });
 
     const [
         triggerPendingOrders,
@@ -94,8 +94,8 @@ const AssignOrders = () => {
 
         try {
             const res = await assignOrders({
-                deliverymanId: selectedDeliveryman,
-                orderIds: selectedOrderIds,
+                deliveryman_id: selectedDeliveryman,
+                order_ids: selectedOrderIds,
             }).unwrap();
 
             if (res?.success || res?.status_code === 200) {
@@ -201,7 +201,7 @@ const AssignOrders = () => {
                 header: () => 'Address / Avenue / Road',
                 cell: (info) => (
                     <span className="font-['DM_Sans',sans-serif] text-sm text-[#1f2937]">
-                         {info.row.original.user.location.area ?? '-'} / {info.row.original.user.location.avenue ?? '-'} / {info.row.original.user.location.road ?? '-'}
+                        {info.row.original.user.location.area ?? '-'} / {info.row.original.user.location.avenue ?? '-'} / {info.row.original.user.location.road ?? '-'}
                     </span>
                 ),
                 enableSorting: false,
@@ -230,15 +230,15 @@ const AssignOrders = () => {
                         status === 'pending'
                             ? 'bg-amber-500'
                             : status === 'ready'
-                            ? 'bg-blue-500'
-                            : 'bg-gray-500';
+                                ? 'bg-blue-500'
+                                : 'bg-gray-500';
                     return (
                         <span
                             className={`inline-block rounded-full px-3 py-1 text-[0.875rem] font-medium text-white ${statusColor}`}
                         >
                             {status
                                 ? status.charAt(0).toUpperCase() +
-                                  status.slice(1)
+                                status.slice(1)
                                 : 'Pending'}
                         </span>
                     );
@@ -260,27 +260,42 @@ const AssignOrders = () => {
     return (
         <div className="space-y-5">
             <CardLayout title="Assign Orders" titleIcon={Truck}>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                    {/* Deliveryman Select */}
                     <div className="md:col-span-2">
-                        <label className="mb-1 block text-sm font-medium text-gray-800">
+                        <label className="mb-1.5 block text-sm font-medium text-gray-800">
                             Select Deliveryman{' '}
                             <span className="text-red-700">*</span>
                         </label>
+
                         <select
                             value={selectedDeliveryman || ''}
                             onChange={(e) =>
-                                setSelectedDeliveryman(
-                                    e.target.value || null
-                                )
+                                setSelectedDeliveryman(e.target.value || null)
                             }
-                            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-400 focus:ring-1 focus:ring-gray-300 focus:outline-none"
-                            disabled={deliverymenLoading}
+                            disabled={deliverymenLoading || assigning}
+                            className="
+                    h-10 w-full rounded-lg
+                    border border-gray-300
+                    bg-white px-3
+                    text-sm text-gray-800
+                    shadow-sm
+                    outline-none
+                    transition
+                    hover:border-gray-400
+                    focus:border-[#0A4D99]
+                    focus:ring-2 focus:ring-[#0A4D99]/10
+                    disabled:cursor-not-allowed
+                    disabled:bg-gray-50
+                    disabled:text-gray-400
+                "
                         >
                             <option value="">
                                 {deliverymenLoading
                                     ? 'Loading deliverymen...'
                                     : '-- Choose a deliveryman --'}
                             </option>
+
                             {deliverymen.map((d) => (
                                 <option key={d?.id} value={d?.id}>
                                     {d?.name}
@@ -288,21 +303,14 @@ const AssignOrders = () => {
                                 </option>
                             ))}
                         </select>
-
-                        <div className="relative mt-3">
-                            <input
-                                type="text"
-                                value={deliverymanSearch}
-                                onChange={(e) =>
-                                    setDeliverymanSearch(e.target.value)
-                                }
-                                placeholder="Filter deliveryman list..."
-                                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-400 focus:ring-1 focus:ring-gray-300 focus:outline-none"
-                            />
-                        </div>
                     </div>
 
-                    <div className="flex flex-col gap-2">
+                    {/* Assign Button */}
+                    <div className="flex flex-col">
+                        <label className="mb-1.5 block text-sm font-medium text-transparent select-none">
+                            Action
+                        </label>
+
                         <button
                             type="button"
                             onClick={handleAssign}
@@ -311,23 +319,46 @@ const AssignOrders = () => {
                                 selectedOrderIds.length === 0 ||
                                 assigning
                             }
-                            className="w-full rounded-lg bg-[#0A4D99] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#053872] disabled:cursor-not-allowed disabled:opacity-50"
+                            className="
+                    h-10 w-full rounded-lg
+                    bg-[#0A4D99]
+                    px-4
+                    text-sm font-semibold text-white
+                    shadow-sm
+                    transition-all duration-200
+                    hover:bg-[#053872]
+                    active:scale-[0.99]
+                    disabled:cursor-not-allowed
+                    disabled:bg-gray-300
+                    disabled:text-gray-500
+                    disabled:shadow-none
+                "
                         >
-                            {assigning
-                                ? 'Assigning...'
-                                : `Assign ${
-                                      selectedOrderIds.length > 0
-                                          ? `(${selectedOrderIds.length})`
-                                          : ''
-                                  }`}
+                            {assigning ? (
+                                <span className="flex items-center justify-center gap-2">
+                                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                                    Assigning...
+                                </span>
+                            ) : (
+                                <>
+                                    Assign
+                                    {selectedOrderIds.length > 0 &&
+                                        ` (${selectedOrderIds.length})`}
+                                </>
+                            )}
                         </button>
+                    </div>
+
+                    {/* Selected Deliveryman Info */}
+                    <div className="md:col-span-3 min-h-[20px]">
                         {selectedDeliverymanName && (
-                            <p className="text-xs text-gray-500">
-                                Assigning to:{' '}
+                            <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                                <span>Assigning to:</span>
+
                                 <span className="font-semibold text-gray-700">
                                     {selectedDeliverymanName}
                                 </span>
-                            </p>
+                            </div>
                         )}
                     </div>
                 </div>
