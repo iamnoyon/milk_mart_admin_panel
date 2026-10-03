@@ -72,8 +72,8 @@ body {
 }
 
 /* =========================================================
-   Dark theme — driven by NEXT_PUBLIC_THEME in .env (dark | light)
-   The `dark` class is rendered on <html> by the root layout, so the
+   Dark theme — the `dark` class on <html> is managed by ThemeProvider
+   (persisted in localStorage, toggled from the Topbar switch), so the
    shared light palette below is repainted in place. No component
    changes are required for gray/white surfaces, text or borders.
    ========================================================= */

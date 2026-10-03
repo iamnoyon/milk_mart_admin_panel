@@ -1,12 +1,13 @@
 "use client";
 
-import { Bell, ChevronRight, LogOut, Menu, User } from "lucide-react";
+import { Bell, ChevronRight, LogOut, Menu, Moon, Sun, User } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
 import { performLogout } from "@/utils/logout";
 import { breadcrumbData } from "./menuItems";
+import { useTheme } from "@/components/providers/ThemeProvider";
 
 const idEncrypted = false; // Set to true if you want to encrypt the ID in the breadcrumb
 
@@ -22,6 +23,8 @@ const encryptId = (id) => {
 
 export default function Topbar({ onMenuToggle }) {
     const state = useSelector((state) => state?.user);
+    const { theme, toggleTheme } = useTheme();
+    const isDark = theme === "dark";
     const [open, setOpen] = useState(false);
     const dropdownRef = useRef(null);
     const pathname = usePathname();
@@ -139,6 +142,28 @@ export default function Topbar({ onMenuToggle }) {
             </div>
 
             <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+                <button
+                    type="button"
+                    role="switch"
+                    aria-checked={isDark}
+                    aria-label="Toggle dark mode"
+                    title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+                    onClick={toggleTheme}
+                    className="relative flex h-8 w-14 cursor-pointer items-center rounded-full border border-gray-300 bg-gray-100 px-1 transition-colors"
+                >
+                    <span
+                        className={`flex h-6 w-6 items-center justify-center rounded-full bg-white shadow-sm transition-transform duration-300 ${
+                            isDark ? "translate-x-6" : "translate-x-0"
+                        }`}
+                    >
+                        {isDark ? (
+                            <Moon size={14} className="text-gray-600" />
+                        ) : (
+                            <Sun size={14} className="text-amber-500" />
+                        )}
+                    </span>
+                </button>
+
                 <button
                     type="button"
                     aria-label="Notifications"
